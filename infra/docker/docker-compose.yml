@@ -1,0 +1,61 @@
+version: "3.9"
+
+# ── Development / staging compose file ──────────────────────────
+# Customise service names, ports, and env vars for your project.
+# For production, use a managed database service instead of this container.
+
+services:
+  web:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile
+    # Change the host port (left side) if 9000 is occupied.
+    ports:
+      - "9000:9000"
+    environment:
+      NODE_ENV: production
+      # Replace these with your actual database / cache URLs.
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/app
+      REDIS_URL: redis://redis:6379
+    env_file:
+      - ../../.env.local
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── PostgreSQL ──────────────────────────────────────────────────
+  # Remove this service if you use a managed database (e.g. Neon, Supabase, RDS).
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: app
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── Redis ───────────────────────────────────────────────────────
+  # Remove this service if you don't use caching / sessions / queues.
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+
+volumes:
+  postgres_data:

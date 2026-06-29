@@ -1,0 +1,9 @@
+{
+  "extends": "../config/tsconfig/react-app.json",
+  "compilerOptions": {
+    "rootDir": "./src",
+    "paths": {}
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}

@@ -1,0 +1,17 @@
+{
+  "name": "My App",
+  "short_name": "My App",
+  "description": "A production-grade TypeScript React application",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

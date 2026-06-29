@@ -1,0 +1,47 @@
+{
+  "$schema": "./template.schema.json",
+  "_comment": "Edit this file before running scripts/init.sh to customize the template for your project.",
+
+  "project": {
+    "name": "my-app",
+    "displayName": "My App",
+    "description": "A production-grade TypeScript React fullstack application",
+    "version": "0.1.0",
+    "author": "Your Name",
+    "license": "MIT",
+    "repository": "https://github.com/your-org/my-app"
+  },
+
+  "packages": {
+    "scope": "myapp",
+    "_comment": "Internal workspace package scope — @<scope>/ui, @<scope>/utils, @<scope>/config"
+  },
+
+  "ports": {
+    "web": 9000,
+    "spa": 9001,
+    "_comment": "Default dev server ports. Auto-increments if occupied."
+  },
+
+  "features": {
+    "nextjs": true,
+    "vite": true,
+    "docker": true,
+    "playwright": true,
+    "cveLite": true,
+    "indexCheck": true,
+    "_comment": "Set to false to remove a feature from the project during init"
+  },
+
+  "ci": {
+    "provider": "github",
+    "defaultBranches": ["main", "develop"],
+    "_comment": "CI provider: github | gitlab"
+  },
+
+  "database": {
+    "enabled": false,
+    "type": "postgresql",
+    "_comment": "Set enabled=true to include DB env vars in .env.local"
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Template Configuration",
+  "description": "Schema for template.config.json",
+  "type": "object",
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["name", "displayName", "description"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "kebab-case project name used in package.json"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Human-readable name used in UI and metadata"
+        },
+        "description": {
+          "type": "string",
+          "description": "One-line project description"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+",
+          "default": "0.1.0"
+        },
+        "author": { "type": "string" },
+        "license": { "type": "string", "default": "MIT" },
+        "repository": { "type": "string", "format": "uri" }
+      }
+    },
+    "packages": {
+      "type": "object",
+      "required": ["scope"],
+      "properties": {
+        "scope": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "NPM workspace scope (without @). E.g. 'myapp' → @myapp/ui"
+        }
+      }
+    },
+    "ports": {
+      "type": "object",
+      "properties": {
+        "web": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "spa": { "type": "integer", "minimum": 1024, "maximum": 65535 }
+      }
+    },
+    "features": {
+      "type": "object",
+      "properties": {
+        "nextjs": { "type": "boolean" },
+        "vite": { "type": "boolean" },
+        "docker": { "type": "boolean" },
+        "playwright": { "type": "boolean" },
+        "cveLite": { "type": "boolean" },
+        "indexCheck": { "type": "boolean" }
+      }
+    },
+    "ci": {
+      "type": "object",
+      "properties": {
+        "provider": { "type": "string", "enum": ["github", "gitlab"] },
+        "defaultBranches": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "database": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean" },
+        "type": { "type": "string", "enum": ["postgresql", "mysql", "sqlite"] }
+      }
+    }
+  }
+}

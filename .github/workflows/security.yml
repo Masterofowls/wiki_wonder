@@ -1,0 +1,41 @@
+name: Security Scan
+
+on:
+  schedule:
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+
+jobs:
+  cve-scan:
+    name: CVE Lite — Weekly scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run CVE Lite (full scan incl. dev deps)
+        run: |
+          bun run cve -- \
+            --include-dev \
+            --format json > security-report.json
+
+      - name: Upload security report
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-report-${{ github.run_id }}
+          path: security-report.json
+          retention-days: 90
+
+      - name: Comment on any HIGH/CRITICAL findings
+        run: |
+          TOTAL=$(cat security-report.json | bun -e "
+            const r = await Bun.file('/dev/stdin').json();
+            process.stdout.write(String(r.summary.total));
+          ")
+          echo "Total findings: $TOTAL"

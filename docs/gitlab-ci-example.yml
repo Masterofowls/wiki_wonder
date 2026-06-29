@@ -1,0 +1,118 @@
+# docs/gitlab-ci-example.yml
+#
+# GitLab CI equivalent of .github/workflows/ci.yml.
+# Copy this to .gitlab-ci.yml in your project root to enable GitLab CI.
+#
+# Requires the following GitLab CI/CD variables:
+#   (none required by default — add secrets via Settings > CI/CD > Variables)
+
+image: oven/bun:1-alpine
+
+variables:
+  BUN_CACHE_DIR: "$CI_PROJECT_DIR/.bun-cache"
+
+cache:
+  key: bun-${CI_COMMIT_REF_SLUG}
+  paths:
+    - .bun-cache/
+    - node_modules/
+    - apps/*/node_modules/
+    - packages/*/node_modules/
+    - tools/*/node_modules/
+
+stages:
+  - install
+  - check
+  - test
+  - build
+  - security
+
+# ── Install ───────────────────────────────────────────────────────
+install:
+  stage: install
+  script:
+    - bun install --frozen-lockfile
+  artifacts:
+    paths:
+      - node_modules/
+      - apps/*/node_modules/
+      - packages/*/node_modules/
+      - tools/*/node_modules/
+    expire_in: 1 hour
+
+# ── Typecheck ─────────────────────────────────────────────────────
+typecheck:
+  stage: check
+  needs: [install]
+  script:
+    - bun run typecheck
+
+# ── Biome lint + format ───────────────────────────────────────────
+lint:
+  stage: check
+  needs: [install]
+  script:
+    - bun run check
+
+# ── Unit tests ────────────────────────────────────────────────────
+test:unit:
+  stage: test
+  needs: [install]
+  image: node:22-alpine
+  before_script:
+    - corepack enable && corepack prepare bun@latest --activate
+  script:
+    - bun run test:unit --coverage
+  coverage: '/Lines\s*:\s*(\d+\.\d+)%/'
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: coverage/cobertura-coverage.xml
+    paths:
+      - coverage/
+    expire_in: 7 days
+
+# ── Build ─────────────────────────────────────────────────────────
+build:web:
+  stage: build
+  needs: [typecheck, lint]
+  variables:
+    NODE_ENV: production
+  script:
+    - bun run build:web
+  artifacts:
+    paths:
+      - apps/web/.next/
+    expire_in: 3 days
+
+build:spa:
+  stage: build
+  needs: [typecheck, lint]
+  variables:
+    NODE_ENV: production
+  script:
+    - bun run build:spa
+  artifacts:
+    paths:
+      - apps/spa/dist/
+    expire_in: 3 days
+
+# ── CVE scan ─────────────────────────────────────────────────────
+cve-scan:
+  stage: security
+  needs: [install]
+  script:
+    - bun run cve -- --fail-on-high --format json > cve-report.json || true
+  artifacts:
+    paths:
+      - cve-report.json
+    expire_in: 14 days
+
+# ── Index check ──────────────────────────────────────────────────
+index-check:
+  stage: security
+  needs: [install]
+  script:
+    - bun run index-check -- --path packages || true
+  allow_failure: true
