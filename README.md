@@ -96,11 +96,12 @@ bun run cve            # CVE scan
 
 ## Deploy (Vercel)
 
-See [docs/VERCEL_DEPLOY.md](docs/VERCEL_DEPLOY.md) for full instructions.
+**Root Directory must be `apps/web`** in Vercel project settings. See [docs/VERCEL_DEPLOY.md](docs/VERCEL_DEPLOY.md).
 
 ```bash
-cd apps/web && vercel link   # or from repo root: vercel link
-vercel deploy --yes            # run from repository root
+cd apps/web
+vercel link
+vercel deploy --yes
 ```
 
 **Strapi CMS** deploys separately — see [apps/cms/README.md](apps/cms/README.md).
