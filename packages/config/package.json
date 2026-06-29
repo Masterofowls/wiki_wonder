@@ -1,0 +1,11 @@
+{
+  "name": "@template/config",
+  "version": "0.1.0",
+  "private": true,
+  "exports": {
+    ".": "./index.ts",
+    "./tsconfig/base": "./tsconfig/base.json",
+    "./tsconfig/react-app": "./tsconfig/react-app.json",
+    "./tsconfig/nextjs": "./tsconfig/nextjs.json"
+  }
+}

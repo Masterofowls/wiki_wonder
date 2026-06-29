@@ -1,0 +1,15 @@
+{
+  "extends": "../../packages/config/tsconfig/react-app.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./src/*"],
+      "@template/ui": ["../../packages/ui/src/index.ts"],
+      "@template/utils": ["../../packages/utils/src/index.ts"]
+    },
+    "composite": true,
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo"
+  },
+  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "exclude": ["node_modules", "dist"]
+}

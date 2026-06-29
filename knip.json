@@ -1,0 +1,68 @@
+{
+  "$schema": "https://unpkg.com/knip@latest/schema.json",
+  "ignore": [
+    "**/*.d.ts",
+    "dist/**",
+    ".next/**",
+    "build/**",
+    "coverage/**",
+    "playwright-report/**",
+    "node_modules/**",
+    "bun.lock",
+    "scripts/**"
+  ],
+  "ignoreDependencies": [
+    "ts-node",
+    "@types/jest",
+    "@types/react-dom",
+    "npm-check-updates",
+    "taze",
+    "react-scan",
+    "@template/ui",
+    "@template/utils",
+    "@template/config"
+  ],
+  "ignoreUnresolved": ["next"],
+  "ignoreExportsUsedInFile": true,
+  "workspaces": {
+    ".": {
+      "entry": ["jest.config.ts", "playwright.config.ts", "taze.config.ts", "tests/**/*.ts", "tests/**/*.spec.ts"],
+      "project": ["*.{ts,js}", "tests/**/*.ts"],
+      "ignoreDependencies": ["@jest/globals"]
+    },
+    "apps/web": {
+      "entry": [
+        "src/app/**/*.{ts,tsx}",
+        "src/components/**/*.{ts,tsx}",
+        "src/lib/**/*.{ts,tsx}",
+        "next.config.ts"
+      ],
+      "project": ["src/**/*.{ts,tsx}"],
+      "ignore": ["src/app/opengraph-image.tsx"]
+    },
+    "apps/spa": {
+      "entry": ["src/main.tsx", "src/utils/pwa.ts", "src/utils/react-scan.ts", "vite.config.ts"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/ui": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.{ts,tsx}"]
+    },
+    "packages/utils": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/config": {
+      "entry": ["index.ts"],
+      "project": ["**/*.ts"]
+    },
+    "tools/cve-lite": {
+      "entry": ["src/cli.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "tools/index-check": {
+      "entry": ["src/cli.ts"],
+      "project": ["src/**/*.ts"]
+    }
+  }
+}

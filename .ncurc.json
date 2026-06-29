@@ -1,0 +1,11 @@
+{
+  "$schema": "https://raw.githubusercontent.com/raineorshine/npm-check-updates/main/src/types/RunOptions.schema.json",
+  "target": "latest",
+  "concurrency": 4,
+  "color": true,
+  "format": ["group"],
+  "packageManager": "bun",
+  "reject": [],
+  "filter": [],
+  "upgrade": false
+}

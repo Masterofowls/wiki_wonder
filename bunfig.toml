@@ -1,0 +1,18 @@
+[install]
+# Prefer exact versions for reproducible installs
+exactOptionalDependencyVersions = false
+frozenLockfile = false
+
+[install.cache]
+dir = "~/.bun/install/cache"
+disable = false
+disableManifest = false
+
+[test]
+# Bun's built-in test runner (Jest-compatible)
+coverage = true
+coverageDir = "coverage"
+coverageReporter = ["text", "lcov", "html"]
+
+[run]
+bun = true
