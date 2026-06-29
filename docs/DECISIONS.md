@@ -37,7 +37,7 @@
 
 **Context**: Some projects need server-side rendering and a backend API (Next.js). Others are pure SPAs deployed to a CDN (Vite).
 
-**Decision**: The template ships both `apps/web` (Next.js) and `apps/spa` (Vite). Teams can delete whichever they don't need. Both share `@template/ui` and `@template/utils`.
+**Decision**: The template ships both `apps/web` (Next.js) and `apps/spa` (Vite). Teams can delete whichever they don't need. Both share `@wikiwonder/ui` and `@wikiwonder/utils`.
 
 **Consequences**: Slightly larger template. The sharing of packages is the primary benefit — teams adopting only one app still get value from the shared packages.
 

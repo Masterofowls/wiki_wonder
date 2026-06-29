@@ -1,0 +1,33 @@
+# Dependencies — installed on Vercel build machine
+node_modules
+**/node_modules
+
+# Strapi CMS — deploy separately (Render/Railway), not on Vercel
+apps/cms/node_modules
+apps/cms/.tmp
+apps/cms/build
+apps/cms/.cache
+apps/cms/.strapi
+
+# Build outputs
+.next
+**/.next
+dist
+**/dist
+build
+**/build
+coverage
+.turbo
+.cache
+
+# Dev / non-production
+tests
+tools
+infra
+docs
+.git
+playwright-report
+*.log
+
+# Large lockfiles in subdirs
+apps/cms/package-lock.json

@@ -1,4 +1,6 @@
-import { truncate } from "@/lib/utils.js";
+import { WikiPreviewCard } from "@/components/wiki/wiki-preview-card";
+import { Badge } from "@/components/ui/badge";
+import { listWikiPages } from "@/lib/wiki";
 import type { Metadata } from "next";
 import Link from "next/link";
 
@@ -6,95 +8,80 @@ export const metadata: Metadata = {
   title: "Home",
 };
 
-// ── Feature cards ─────────────────────────────────────────────────────────────
-// Edit this array to showcase your project's own features.
-const FEATURES = [
-  {
-    title: "Next.js 15",
-    description: "App Router with Turbopack, Server Components, and streaming.",
-    icon: "⚡",
-  },
-  {
-    title: "TypeScript Strict",
-    description: "noUncheckedIndexedAccess, noImplicitReturns, and more.",
-    icon: "🔒",
-  },
-  {
-    title: "Biome",
-    description: "Blazing-fast linter and formatter — replaces ESLint + Prettier.",
-    icon: "🌿",
-  },
-  {
-    title: "Bun Workspaces",
-    description: "Monorepo with fast installs and built-in test runner.",
-    icon: "🐇",
-  },
-  {
-    title: "CVE Lite CLI",
-    description: "Scan dependencies for known vulnerabilities via OSV.dev.",
-    icon: "🛡️",
-  },
-  {
-    title: "Index Check CLI",
-    description: "Validate barrel file completeness and detect missing exports.",
-    icon: "🔍",
-  },
+const HIGHLIGHTS = [
+  { title: "Instant Search", description: "Autocomplete across titles, summaries, and full page content." },
+  { title: "Rich Markdown", description: "LaTeX, GFM tables, wiki links, diagrams, images, and video embeds." },
+  { title: "Wikipedia Import", description: "Import and normalize articles with link validation." },
+  { title: "Offline PWA", description: "Install WikiWonder and browse cached pages offline." },
+  { title: "Strapi CMS", description: "Fast content authoring via GraphQL-connected Strapi backend." },
+  { title: "Bookmarks", description: "Save pages locally and sync when authenticated." },
 ] as const;
 
-export default function HomePage() {
-  const appName = process.env.NEXT_PUBLIC_APP_NAME ?? "My App";
-  const appDescription = truncate(
-    process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? "A production-grade TypeScript React application",
-    160,
-  );
+export default async function HomePage() {
+  const pages = await listWikiPages(6);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-950 to-slate-900">
-      <div className="mx-auto max-w-6xl px-4 py-20 sm:px-6 lg:px-8">
-        <header className="mb-20 text-center">
-          <div className="mb-6 inline-flex items-center rounded-full bg-blue-500/10 px-4 py-1.5 text-sm font-medium text-blue-400 ring-1 ring-blue-500/20">
-            v{process.env.npm_package_version ?? "0.1.0"} — Production Ready
-          </div>
-          <h1 className="mb-6 text-5xl font-bold tracking-tight text-white sm:text-6xl">
-            {appName}
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg text-slate-400">{appDescription}</p>
-          <div className="mt-10 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/api/health"
-              className="rounded-lg bg-blue-600 px-6 py-3 font-semibold text-white transition-colors hover:bg-blue-700"
-            >
-              Health Check →
-            </Link>
-            <a
-              href="https://github.com"
-              className="rounded-lg border border-slate-700 bg-slate-800/50 px-6 py-3 font-semibold text-white transition-colors hover:bg-slate-800"
-            >
-              View on GitHub
-            </a>
-          </div>
-        </header>
+    <div className="space-y-12">
+      <section className="space-y-6 text-center">
+        <Badge variant="secondary" className="mx-auto">
+          Advanced Modern Wiki
+        </Badge>
+        <h1 className="text-4xl font-bold tracking-tight sm:text-5xl">WikiWonder</h1>
+        <p className="mx-auto max-w-2xl text-lg text-muted-foreground">
+          Full-featured wiki with instant search, rich markdown, Strapi CMS, Wikipedia import, and offline PWA —
+          built on Next.js, Drizzle, and Supabase.
+        </p>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Link
+            href="/wiki/welcome"
+            className="inline-flex h-10 items-center rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+          >
+            Read Welcome Guide
+          </Link>
+          <Link
+            href="/wiki"
+            className="inline-flex h-10 items-center rounded-md border border-input px-6 text-sm font-medium hover:bg-accent"
+          >
+            Browse All Pages
+          </Link>
+        </div>
+      </section>
 
-        <section aria-labelledby="features-heading">
-          <h2 id="features-heading" className="sr-only">
-            Features
+      <section aria-labelledby="features-heading">
+        <h2 id="features-heading" className="mb-6 text-2xl font-semibold">
+          Features
+        </h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {HIGHLIGHTS.map((item) => (
+            <article key={item.title} className="rounded-xl border border-border bg-card p-5">
+              <h3 className="mb-2 font-semibold">{item.title}</h3>
+              <p className="text-sm text-muted-foreground">{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section aria-labelledby="recent-heading">
+        <div className="mb-6 flex items-center justify-between">
+          <h2 id="recent-heading" className="text-2xl font-semibold">
+            Recent Pages
           </h2>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {FEATURES.map((feature) => (
-              <article
-                key={feature.title}
-                className="rounded-xl border border-slate-700/50 bg-slate-800/30 p-6 transition-colors hover:border-blue-500/30 hover:bg-slate-800/50"
-              >
-                <div className="mb-3 text-3xl" role="img" aria-label={feature.title}>
-                  {feature.icon}
-                </div>
-                <h3 className="mb-2 text-lg font-semibold text-white">{feature.title}</h3>
-                <p className="text-sm leading-relaxed text-slate-400">{feature.description}</p>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
+          <Link href="/wiki" className="text-sm text-primary hover:underline">
+            View all
+          </Link>
+        </div>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {pages.map((page) => (
+            <WikiPreviewCard
+              key={page.id}
+              slug={page.slug}
+              title={page.title}
+              summary={page.summary}
+              sourceType={page.sourceType}
+            />
+          ))}
+        </div>
+      </section>
     </div>
   );
 }

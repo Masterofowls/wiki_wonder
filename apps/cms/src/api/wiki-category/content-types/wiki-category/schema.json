@@ -1,0 +1,35 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wiki_categories",
+  "info": {
+    "singularName": "wiki-category",
+    "pluralName": "wiki-categories",
+    "displayName": "Wiki Category",
+    "description": "Organize wiki pages into categories"
+  },
+  "options": {
+    "draftAndPublish": false
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "name",
+      "required": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "pages": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::wiki-page.wiki-page",
+      "mappedBy": "category"
+    }
+  }
+}

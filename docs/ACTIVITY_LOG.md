@@ -9,11 +9,11 @@ Running history of significant changes to this project.
 
 ## 2026-06-28
 
-- **Template scaffold** — Created full monorepo from `ts-react-fullstack-template`
+- **Template scaffold** — Created full monorepo from `wiki-wonder`
 - **Root configs** — `biome.json`, `tsconfig.json`, `bunfig.toml`, `jest.config.ts`, `playwright.config.ts`, `.gitignore`, `.env.example`
 - **apps/web** — Next.js 15 App Router; display name/description driven by `NEXT_PUBLIC_*` env vars
 - **apps/spa** — Vite 6 + React 19; app name driven by `VITE_APP_NAME` env var
-- **packages/** — `@template/ui` (Button, Card, Badge), `@template/utils` (cn, validateEnv, logger), `@template/config` (tsconfig presets)
+- **packages/** — `@wikiwonder/ui` (Button, Card, Badge), `@wikiwonder/utils` (cn, validateEnv, logger), `@wikiwonder/config` (tsconfig presets)
 - **tools/cve-lite** — CVE Lite CLI (OSV.dev, table/JSON/minimal output, `--fail-on-high`)
 - **tools/index-check** — Index Check CLI (barrel validation, auto-fix mode)
 - **tests/** — 30 passing Jest unit tests; integration health check; Playwright E2E scaffold
@@ -55,5 +55,22 @@ Running history of significant changes to this project.
 - **apps/spa/index.html** — Full OG + Twitter Card meta; apple PWA tags; `%VITE_*%` tokens; canonical URL
 - **apps/spa/vite.config.ts** — `loadEnv` for build-time injection; immutable asset file names; `define` block
 - **.env.example** — Added `NEXT_PUBLIC_ENABLE_SW`, `NEXT_PUBLIC_AUTHOR`, `VITE_ENABLE_SW`, `VITE_APP_URL`, `VITE_AUTHOR`
+
+## 2026-06-29
+
+- **WikiWonder init** — Applied template substitutions (`@wikiwonder/*`, removed Vite SPA, renamed to WikiWonder)
+- **packages/db** — Drizzle schema: users, wiki_pages, bookmarks; migration scripts
+- **packages/wiki-core** — Markdown pipeline (GFM, KaTeX, wiki links), Zod schemas, Wikipedia REST import
+- **apps/web** — Wiki routes, instant search, auth (NextAuth credentials), bookmarks, import UI, PWA, themes
+- **Dependencies** — Tailwind 4, Shadcn-style UI, Zustand, GraphQL client, next-pwa, next-themes
+- **Build verified** — `bun run typecheck` + `bun run build:web` pass
+
+## 2026-06-29 (Strapi CMS + Vercel)
+
+- **apps/cms** — Strapi 5 with wiki-page + wiki-category content types, GraphQL plugin, seed bootstrap
+- **Strapi integration** — Next.js reads CMS pages via Strapi 5 flat GraphQL queries (server-side token)
+- **Docker** — Added `cms` service + `Dockerfile.cms` to docker-compose
+- **Vercel** — `apps/web/vercel.json`, `docs/VERCEL_DEPLOY.md`, updated `.env.example` with production vars
+- **Monorepo** — Excluded `apps/cms` from Bun workspaces (uses npm); added `dev:cms` / `build:cms` scripts
 
 ---

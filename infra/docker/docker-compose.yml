@@ -1,9 +1,3 @@
-version: "3.9"
-
-# ── Development / staging compose file ──────────────────────────
-# Customise service names, ports, and env vars for your project.
-# For production, use a managed database service instead of this container.
-
 services:
   web:
     build:
@@ -23,6 +17,30 @@ services:
       db:
         condition: service_healthy
       redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ── Strapi CMS ──────────────────────────────────────────────────
+  cms:
+    build:
+      context: ../..
+      dockerfile: infra/docker/Dockerfile.cms
+    ports:
+      - "1337:1337"
+    environment:
+      NODE_ENV: development
+      HOST: 0.0.0.0
+      PORT: 1337
+      DATABASE_CLIENT: postgres
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/wikiwonder_strapi
+      DATABASE_SSL: "false"
+      APP_KEYS: devKey1,devKey2,devKey3,devKey4
+      API_TOKEN_SALT: devsalt
+      ADMIN_JWT_SECRET: devadminjwt
+      TRANSFER_TOKEN_SALT: devtransfer
+      JWT_SECRET: devjwt
+    depends_on:
+      db:
         condition: service_healthy
     restart: unless-stopped
 

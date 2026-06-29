@@ -3,11 +3,34 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"],
-      "@template/ui": ["../../packages/ui/src/index.ts"],
-      "@template/utils": ["../../packages/utils/src/index.ts"]
-    }
+      "@/*": [
+        "./src/*"
+      ],
+      "@wikiwonder/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@wikiwonder/utils": [
+        "../../packages/utils/src/index.ts"
+      ],
+      "@wikiwonder/db": [
+        "../../packages/db/src/index.ts"
+      ],
+      "@wikiwonder/wiki-core": [
+        "../../packages/wiki-core/src/index.ts"
+      ],
+      "@wikiwonder/wiki-core/import": [
+        "../../packages/wiki-core/src/import.ts"
+      ]
+    },
+    "allowJs": true
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules"]
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

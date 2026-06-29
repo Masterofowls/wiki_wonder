@@ -81,8 +81,8 @@ Write-Host ""
 if ($Config) {
     Write-Info "Reading values from template.config.json..."
     $ProjectName    = Read-Config "project.name"        "my-app"
-    $DisplayName    = Read-Config "project.displayName" "My App"
-    $Description    = Read-Config "project.description" "A production-grade TypeScript React fullstack application"
+    $DisplayName    = Read-Config "project.displayName" "WikiWonder"
+    $Description    = Read-Config "project.description" "Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import"
     $Author         = Read-Config "project.author"      ""
     $Scope          = Read-Config "packages.scope"      "myapp"
     $WebPort        = Read-Config "ports.web"           "9000"
@@ -96,8 +96,8 @@ if ($Config) {
     # Sanitise to kebab-case
     $ProjectName = ($ProjectName.ToLower() -replace '[^a-z0-9-]', '-').Trim('-')
 
-    $DisplayName = Ask "Display name (e.g. My App)"              "My App"
-    $Description = Ask "Short description"                        "A production-grade TypeScript React fullstack application"
+    $DisplayName = Ask "Display name (e.g. My App)"              "WikiWonder"
+    $Description = Ask "Short description"                        "Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import"
     $Author      = Ask "Author name"                              ""
     $Scope       = Ask "Package scope (e.g. myapp → @myapp/ui)"  $ProjectName
     $Scope       = ($Scope.ToLower() -replace '[^a-z0-9-]', '')
@@ -123,8 +123,8 @@ Write-Host ""
 Write-Hr
 Write-Host "  Substitutions to apply:" -ForegroundColor White
 Write-Hr
-Write-Host "  Name         ts-react-fullstack-template  →  $ProjectName"
-Write-Host "  Display      My App / TS React Template   →  $DisplayName"
+Write-Host "  Name         wiki-wonder  →  $ProjectName"
+Write-Host "  Display      My App / WikiWonder   →  $DisplayName"
 Write-Host "  Scope        @template/                   →  @$Scope/"
 Write-Host "  Web port     9000                         →  $WebPort"
 Write-Host "  SPA port     9001                         →  $SpaPort"
@@ -165,22 +165,22 @@ function Replace-InFiles([string]$old, [string]$new) {
 
 # ── Apply substitutions ───────────────────────────────────────────────────────
 Write-Ok "Replacing package names and scopes..."
-Replace-InFiles "ts-react-fullstack-template"    $ProjectName
-Replace-InFiles "@template/ui"                   "@$Scope/ui"
-Replace-InFiles "@template/utils"                "@$Scope/utils"
-Replace-InFiles "@template/config"               "@$Scope/config"
-Replace-InFiles "@template/web"                  "@$Scope/web"
-Replace-InFiles "@template/spa"                  "@$Scope/spa"
-Replace-InFiles "@template/cve-lite"             "@$Scope/cve-lite"
-Replace-InFiles "@template/index-check"          "@$Scope/index-check"
+Replace-InFiles "wiki-wonder"    $ProjectName
+Replace-InFiles "@wikiwonder/ui"                   "@$Scope/ui"
+Replace-InFiles "@wikiwonder/utils"                "@$Scope/utils"
+Replace-InFiles "@wikiwonder/config"               "@$Scope/config"
+Replace-InFiles "@wikiwonder/web"                  "@$Scope/web"
+Replace-InFiles "@wikiwonder/spa"                  "@$Scope/spa"
+Replace-InFiles "@wikiwonder/cve-lite"             "@$Scope/cve-lite"
+Replace-InFiles "@wikiwonder/index-check"          "@$Scope/index-check"
 
 Write-Ok "Replacing display names..."
-Replace-InFiles "TS React Template"              $DisplayName
-Replace-InFiles "TS Template"                    $DisplayName
-Replace-InFiles "TS React SPA Template"          "$DisplayName SPA"
-Replace-InFiles "TypeScript React Fullstack Template" $DisplayName
-Replace-InFiles "Advanced TypeScript React fullstack reusable monorepo template" $Description
-Replace-InFiles "A production-grade TypeScript React fullstack application" $Description
+Replace-InFiles "WikiWonder"              $DisplayName
+Replace-InFiles "WikiWonder"                    $DisplayName
+Replace-InFiles "WikiWonder SPA"          "$DisplayName SPA"
+Replace-InFiles "WikiWonder" $DisplayName
+Replace-InFiles "Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import" $Description
+Replace-InFiles "Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import" $Description
 
 Write-Ok "Replacing ports..."
 if ($WebPort -ne "9000") { Replace-InFiles "9000" $WebPort }

@@ -1,9 +1,9 @@
 import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
-  const appName = process.env.NEXT_PUBLIC_APP_NAME ?? "My App";
+  const appName = process.env.NEXT_PUBLIC_APP_NAME ?? "WikiWonder";
   const description =
-    process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? "A production-grade TypeScript React application";
+    process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? "Advanced Modern Wiki with instant search, rich markdown, and offline PWA";
 
   return {
     name: appName,

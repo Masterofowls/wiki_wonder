@@ -1,0 +1,12 @@
+node_modules/
+.cache/
+.tmp/
+build/
+dist/
+exports/
+.strapi/
+.env
+license.txt
+*.db
+public/uploads/*
+!public/uploads/.gitkeep

@@ -1,5 +1,5 @@
 {
-  "name": "@template/config",
+  "name": "@wikiwonder/config",
   "version": "0.1.0",
   "private": true,
   "exports": {

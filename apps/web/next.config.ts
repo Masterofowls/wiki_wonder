@@ -1,28 +1,40 @@
 import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import withPWAInit from "@ducanh2912/next-pwa";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+
+const withPWA = withPWAInit({
+  dest: "public",
+  disable: process.env.NODE_ENV === "development" && process.env.NEXT_PUBLIC_ENABLE_SW !== "true",
+  register: true,
+  fallbacks: {
+    document: "/offline",
+  },
+});
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
-
-  experimental: {
-    typedRoutes: true,
-  },
+  outputFileTracingRoot: path.join(__dirname, "../.."),
+  typedRoutes: true,
 
   images: {
     formats: ["image/avif", "image/webp"],
-    // Add remote image hostnames your app loads from:
-    // { protocol: "https", hostname: "images.example.com" }
-    remotePatterns: [],
+    remotePatterns: [
+      { protocol: "https", hostname: "upload.wikimedia.org" },
+      { protocol: "https", hostname: "*.supabase.co" },
+    ],
   },
 
   async headers() {
     return [
-      // ── Security headers — applied to every response ──────────
       {
         source: "/(.*)",
         headers: [
           { key: "X-Content-Type-Options", value: "nosniff" },
-          { key: "X-Frame-Options", value: "DENY" },
+          { key: "X-Frame-Options", value: "SAMEORIGIN" },
           { key: "X-XSS-Protection", value: "1; mode=block" },
           { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
           {
@@ -31,10 +43,6 @@ const nextConfig: NextConfig = {
           },
         ],
       },
-
-      // ── Service Worker — must not be cached by the browser ────
-      // Browsers cache SW files aggressively; force revalidation on
-      // every page load so updates are picked up immediately.
       {
         source: "/sw.js",
         headers: [
@@ -43,8 +51,6 @@ const nextConfig: NextConfig = {
           { key: "Service-Worker-Allowed", value: "/" },
         ],
       },
-
-      // ── Web App Manifest — short cache, allow revalidation ────
       {
         source: "/manifest.webmanifest",
         headers: [
@@ -52,19 +58,10 @@ const nextConfig: NextConfig = {
           { key: "Content-Type", value: "application/manifest+json" },
         ],
       },
-
-      // ── OG image — long-lived CDN cache ───────────────────────
-      {
-        source: "/opengraph-image",
-        headers: [
-          { key: "Cache-Control", value: "public, max-age=86400, stale-while-revalidate=604800" },
-        ],
-      },
     ];
   },
 
-  // Workspace packages that Next.js needs to transpile.
-  transpilePackages: ["@template/ui", "@template/utils"],
+  transpilePackages: ["@wikiwonder/ui", "@wikiwonder/utils", "@wikiwonder/db", "@wikiwonder/wiki-core"],
 };
 
-export default nextConfig;
+export default withPWA(nextConfig);

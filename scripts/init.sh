@@ -69,8 +69,8 @@ echo ""
 
 if [ "$USE_CONFIG" = true ]; then
   PROJECT_NAME=$(read_config "project.name" "my-app")
-  DISPLAY_NAME=$(read_config "project.displayName" "My App")
-  DESCRIPTION=$(read_config "project.description" "A production-grade TypeScript React fullstack application")
+  DISPLAY_NAME=$(read_config "project.displayName" "WikiWonder")
+  DESCRIPTION=$(read_config "project.description" "Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import")
   AUTHOR=$(read_config "project.author" "")
   SCOPE=$(read_config "packages.scope" "myapp")
   WEB_PORT=$(read_config "ports.web" "9000")
@@ -89,8 +89,8 @@ else
   prompt "Display name (e.g. My App) [My App]:"
   read -r DISPLAY_NAME; DISPLAY_NAME="${DISPLAY_NAME:-My App}"
 
-  prompt "Short description [A production-grade TypeScript React fullstack application]:"
-  read -r DESCRIPTION; DESCRIPTION="${DESCRIPTION:-A production-grade TypeScript React fullstack application}"
+  prompt "Short description [Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import]:"
+  read -r DESCRIPTION; DESCRIPTION="${DESCRIPTION:-Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import}"
 
   prompt "Author name []:"
   read -r AUTHOR; AUTHOR="${AUTHOR:-}"
@@ -122,8 +122,8 @@ echo ""
 hr
 echo -e "${BOLD}  Applying the following substitutions:${RESET}"
 hr
-echo -e "  Name          ${CYAN}ts-react-fullstack-template${RESET} → ${GREEN}${PROJECT_NAME}${RESET}"
-echo -e "  Display name  ${CYAN}My App / TS React Template${RESET}  → ${GREEN}${DISPLAY_NAME}${RESET}"
+echo -e "  Name          ${CYAN}wiki-wonder${RESET} → ${GREEN}${PROJECT_NAME}${RESET}"
+echo -e "  Display name  ${CYAN}My App / WikiWonder${RESET}  → ${GREEN}${DISPLAY_NAME}${RESET}"
 echo -e "  Description   → ${GREEN}${DESCRIPTION}${RESET}"
 echo -e "  Scope         ${CYAN}@template/${RESET}                  → ${GREEN}@${SCOPE}/${RESET}"
 echo -e "  Web port      ${CYAN}9000${RESET}                         → ${GREEN}${WEB_PORT}${RESET}"
@@ -160,24 +160,24 @@ replace_in_files() {
 
 # ── Apply substitutions ────────────────────────────────────────────────────────
 log "Replacing package names and scopes..."
-replace_in_files "ts-react-fullstack-template" "$PROJECT_NAME"
-replace_in_files "@template/ui"     "@${SCOPE}/ui"
-replace_in_files "@template/utils"  "@${SCOPE}/utils"
-replace_in_files "@template/config" "@${SCOPE}/config"
-replace_in_files "@template/web"    "@${SCOPE}/web"
-replace_in_files "@template/spa"    "@${SCOPE}/spa"
-replace_in_files "@template/cve-lite"    "@${SCOPE}/cve-lite"
-replace_in_files "@template/index-check" "@${SCOPE}/index-check"
+replace_in_files "wiki-wonder" "$PROJECT_NAME"
+replace_in_files "@wikiwonder/ui"     "@${SCOPE}/ui"
+replace_in_files "@wikiwonder/utils"  "@${SCOPE}/utils"
+replace_in_files "@wikiwonder/config" "@${SCOPE}/config"
+replace_in_files "@wikiwonder/web"    "@${SCOPE}/web"
+replace_in_files "@wikiwonder/spa"    "@${SCOPE}/spa"
+replace_in_files "@wikiwonder/cve-lite"    "@${SCOPE}/cve-lite"
+replace_in_files "@wikiwonder/index-check" "@${SCOPE}/index-check"
 
 log "Replacing display names..."
-replace_in_files "TS React Template"                    "$DISPLAY_NAME"
-replace_in_files "TS Template"                          "$DISPLAY_NAME"
-replace_in_files "TS React SPA Template"                "$DISPLAY_NAME SPA"
+replace_in_files "WikiWonder"                    "$DISPLAY_NAME"
+replace_in_files "WikiWonder"                          "$DISPLAY_NAME"
+replace_in_files "WikiWonder SPA"                "$DISPLAY_NAME SPA"
 replace_in_files "TS React SPA"                         "$DISPLAY_NAME SPA"
 replace_in_files "TypeScript React fullstack template"  "$DESCRIPTION"
-replace_in_files "TypeScript React Fullstack Template"  "$DISPLAY_NAME"
-replace_in_files "Advanced TypeScript React fullstack reusable monorepo template" "$DESCRIPTION"
-replace_in_files "A production-grade TypeScript React fullstack application" "$DESCRIPTION"
+replace_in_files "WikiWonder"  "$DISPLAY_NAME"
+replace_in_files "Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import" "$DESCRIPTION"
+replace_in_files "Advanced Modern Wiki — instant search, rich markdown, Strapi CMS, offline PWA, and Wikipedia import" "$DESCRIPTION"
 
 log "Replacing ports..."
 if [ "$WEB_PORT" != "9000" ]; then

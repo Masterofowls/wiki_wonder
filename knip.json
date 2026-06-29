@@ -18,9 +18,11 @@
     "npm-check-updates",
     "taze",
     "react-scan",
-    "@template/ui",
-    "@template/utils",
-    "@template/config"
+    "@wikiwonder/ui",
+    "@wikiwonder/utils",
+    "@wikiwonder/config",
+    "@wikiwonder/db",
+    "@wikiwonder/wiki-core"
   ],
   "ignoreUnresolved": ["next"],
   "ignoreExportsUsedInFile": true,
@@ -40,9 +42,13 @@
       "project": ["src/**/*.{ts,tsx}"],
       "ignore": ["src/app/opengraph-image.tsx"]
     },
-    "apps/spa": {
-      "entry": ["src/main.tsx", "src/utils/pwa.ts", "src/utils/react-scan.ts", "vite.config.ts"],
-      "project": ["src/**/*.{ts,tsx}"]
+    "packages/db": {
+      "entry": ["src/index.ts", "drizzle.config.ts"],
+      "project": ["src/**/*.ts"]
+    },
+    "packages/wiki-core": {
+      "entry": ["src/index.ts"],
+      "project": ["src/**/*.ts"]
     },
     "packages/ui": {
       "entry": ["src/index.ts"],

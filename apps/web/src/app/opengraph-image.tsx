@@ -9,9 +9,9 @@ export const contentType = "image/png";
 // Generates the default /opengraph-image used by layout.tsx metadata.
 // Customise the JSX below to match your brand — colours, logo, typography.
 export default function OgImage() {
-  const appName = process.env.NEXT_PUBLIC_APP_NAME ?? "My App";
+  const appName = process.env.NEXT_PUBLIC_APP_NAME ?? "WikiWonder";
   const description =
-    process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? "A production-grade TypeScript React application";
+    process.env.NEXT_PUBLIC_APP_DESCRIPTION ?? "Advanced Modern Wiki with instant search, rich markdown, and offline PWA";
 
   return new ImageResponse(
     <div

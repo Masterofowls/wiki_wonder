@@ -1,0 +1,53 @@
+{
+  "kind": "collectionType",
+  "collectionName": "wiki_pages",
+  "info": {
+    "singularName": "wiki-page",
+    "pluralName": "wiki-pages",
+    "displayName": "Wiki Page",
+    "description": "WikiWonder wiki article with markdown content"
+  },
+  "options": {
+    "draftAndPublish": true
+  },
+  "pluginOptions": {},
+  "attributes": {
+    "title": {
+      "type": "string",
+      "required": true,
+      "maxLength": 500
+    },
+    "slug": {
+      "type": "uid",
+      "targetField": "title",
+      "required": true
+    },
+    "summary": {
+      "type": "text",
+      "maxLength": 1000
+    },
+    "content": {
+      "type": "richtext",
+      "required": true
+    },
+    "contentFormat": {
+      "type": "enumeration",
+      "enum": ["markdown", "html"],
+      "default": "markdown"
+    },
+    "sourceUrl": {
+      "type": "string"
+    },
+    "sourceType": {
+      "type": "enumeration",
+      "enum": ["local", "wikipedia", "import", "strapi"],
+      "default": "strapi"
+    },
+    "category": {
+      "type": "relation",
+      "relation": "manyToOne",
+      "target": "api::wiki-category.wiki-category",
+      "inversedBy": "pages"
+    }
+  }
+}

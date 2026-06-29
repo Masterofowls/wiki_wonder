@@ -5,7 +5,7 @@ const BASE_URL = process.env.PLAYWRIGHT_BASE_URL ?? "http://localhost:9000";
 test.describe("Next.js App", () => {
   test("renders home page with heading", async ({ page }) => {
     await page.goto(BASE_URL);
-    await expect(page).toHaveTitle(/TS React Template|TypeScript React/i);
+    await expect(page).toHaveTitle(/WikiWonder|TypeScript React/i);
     const heading = page.getByRole("heading", { level: 1 });
     await expect(heading).toBeVisible();
   });

@@ -6,8 +6,8 @@ Thank you for contributing to this template. Follow these guidelines to keep the
 
 ```bash
 # 1. Fork and clone
-git clone https://github.com/your-fork/ts-react-fullstack-template
-cd ts-react-fullstack-template
+git clone https://github.com/your-fork/wiki-wonder
+cd wiki-wonder
 
 # 2. Install dependencies
 bun install

@@ -1,105 +1,75 @@
-# Architecture
-
-> **Template note**: Update this file to reflect your project's actual architecture after running `scripts/init.sh`.
+# Architecture — WikiWonder
 
 ## Overview
 
-This monorepo is organised into three layers: **apps** (deployable units), **packages** (shared libraries), and **tools** (CLI utilities).
+WikiWonder is a Bun monorepo with a Next.js 15 wiki frontend, shared packages for data and markdown processing, and optional Strapi CMS integration.
 
 ```
-┌──────────────────────────────────────────────────────────────┐
-│                      Monorepo Root                           │
-│                (Bun Workspaces · Biome · Jest)               │
-└───────────┬──────────────────┬──────────────────────────────┘
-            │                  │
-     ┌──────▼──────┐    ┌──────▼──────┐
-     │  apps/web   │    │  apps/spa   │
-     │  Next.js 15 │    │  Vite + RR  │
-     │  Port 9000  │    │  Port 9001  │
-     └──────┬──────┘    └──────┬──────┘
-            │                  │
-            └────────┬─────────┘
-                     │ imports
-         ┌───────────▼───────────────────────┐
-         │           packages/               │
-         │   @template/ui   @template/utils  │
-         └───────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────┐
+│                     apps/web (Next.js 15)                   │
+│  Pages: /, /wiki, /wiki/[slug], /search, /import, /login   │
+│  API: /api/search, /api/import, /api/auth, /api/health      │
+└────────────┬───────────────────────────────┬────────────────┘
+             │                               │
+    ┌────────▼────────┐              ┌───────▼────────┐
+    │  @wikiwonder/db │              │ @wikiwonder/   │
+    │  Drizzle ORM    │              │ wiki-core      │
+    │  Supabase PG    │              │ Markdown+Import│
+    └────────────────┘              └────────────────┘
+             │
+    ┌────────▼────────┐
+    │  apps/cms       │  Strapi 5 — wiki-page, wiki-category
+    │  GraphQL :1337  │  (Render/Railway/Docker — not Vercel)
+    └─────────────────┘
 ```
 
-## Applications
+## Data Model
 
-### `apps/web` — Next.js 15 App Router
-
-| Concern | Implementation |
+| Table | Purpose |
 |---|---|
-| Rendering | Server Components by default; `"use client"` only at interaction leaves |
-| Routing | File-system routes under `src/app/` |
-| API | Route Handlers in `src/app/api/` |
-| Config | `next.config.ts` — security headers, transpiled packages |
-| Env | `NEXT_PUBLIC_*` vars inlined at build time; secrets via server-side `process.env` |
-
-### `apps/spa` — Vite + React 19
-
-| Concern | Implementation |
-|---|---|
-| Routing | React Router 7 (browser history) |
-| Build | Vite 6 with manual chunk splitting |
-| PWA | Manifest at `public/manifest.json` |
-| API | `/api` proxied to `apps/web` in development |
-| Env | `VITE_*` vars inlined at build time |
-
-## Packages
-
-### `@template/ui`
-React component library. No runtime dependencies beyond React. All components:
-- Are accessible (WCAG 2.1 AA target)
-- Accept a `className` prop for Tailwind overrides
-- Are exported from a single barrel (`src/index.ts`)
-
-### `@template/utils`
-Framework-agnostic utilities:
-- `cn()` — class-name concatenation with falsy filtering
-- `validateEnv()` — type-safe env validation; crashes fast with descriptive messages
-- `logger` — leveled console logger with child scope support
-
-### `@template/config`
-Configuration files only — no runtime code except a metadata export.
-
-## CLI Tools
-
-### `tools/cve-lite`
-Queries [OSV.dev](https://osv.dev) batch API for CVEs in `package.json` dependencies.
-No authentication required. Outputs table / JSON / minimal formats.
-
-### `tools/index-check`
-Scans directory trees for barrel file completeness. Detects missing `index.ts` files
-and un-re-exported modules. `--auto-fix` mode creates / patches them.
+| `users` | Username + password hash (no email) |
+| `wiki_pages` | Slug, title, markdown content, source metadata |
+| `bookmarks` | User ↔ page associations |
 
 ## Request Flow
 
-```
-Browser
- ├── / ───────────────────────► Next.js RSC (Server Components)
- │                                └── @template/ui (server-side render)
- │
- ├── /api/* ──────────────────► Next.js Route Handlers
- │
- └── (SPA)  ──────────────────► Vite Dev Server / CDN (static)
-                                  ├── React Router
-                                  └── @template/ui (client-side)
-```
+### Wiki Page Render
 
-## Key Design Decisions
+1. `GET /wiki/[slug]` → `getWikiPageBySlug()` (DB or sample fallback)
+2. `renderMarkdownToHtml()` — remark/rehype pipeline with GFM, KaTeX, wiki links
+3. Server-rendered HTML via `WikiContent` component
 
-See [DECISIONS.md](DECISIONS.md) for ADR entries.
+### Search Autocomplete
 
----
+1. Client debounces input (200ms) → `GET /api/search?q=...`
+2. Drizzle `ilike` query on title, summary, content
+3. Results displayed in cmdk Command palette
 
-## Adding a New Feature
+### Wikipedia Import
 
-1. **Shared logic** → `packages/utils/src/`
-2. **Shared UI** → `packages/ui/src/components/`
-3. **Server-side page/route** → `apps/web/src/app/`
-4. **Client-side page** → `apps/spa/src/pages/`
-5. **CLI tool** → `tools/<tool-name>/src/`
-6. **Tests** → `tests/unit/` (unit) or `tests/integration/` (API)
+1. Authenticated `POST /api/import` with URL or title
+2. Fetches Wikipedia REST summary + MediaWiki wikitext
+3. Converts wikitext → markdown, upserts into `wiki_pages`
+
+## Auth
+
+NextAuth v5 Credentials provider — username/password validated against `users` table via bcrypt. No email field or OAuth in v0.1.
+
+## PWA
+
+`@ducanh2912/next-pwa` generates service worker at build time. Offline fallback document at `/offline`.
+
+## Key Packages
+
+- **`@wikiwonder/db`** — Drizzle client, schema, migrations
+- **`@wikiwonder/wiki-core`** — Zod schemas, markdown renderer, Wikipedia import (server subpath)
+- **`@wikiwonder/ui`** — Shared Button, Card, Badge from template
+- **`@wikiwonder/utils`** — Env validation, logger
+
+## Deployment (Vercel)
+
+1. Set `DATABASE_URL`, `AUTH_SECRET`, `AUTH_URL` in Vercel env
+2. Run migrations against Supabase before first deploy
+3. `bun run build:web` — root build command
+
+See [DECISIONS.md](DECISIONS.md) for ADRs.

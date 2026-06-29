@@ -30,9 +30,11 @@
     "allowSyntheticDefaultImports": true,
     "jsx": "react-jsx",
     "paths": {
-      "@template/ui": ["./packages/ui/src/index.ts"],
-      "@template/utils": ["./packages/utils/src/index.ts"],
-      "@template/config": ["./packages/config/index.ts"]
+      "@wikiwonder/ui": ["./packages/ui/src/index.ts"],
+      "@wikiwonder/utils": ["./packages/utils/src/index.ts"],
+      "@wikiwonder/config": ["./packages/config/index.ts"],
+    "@wikiwonder/db": ["./packages/db/src/index.ts"],
+    "@wikiwonder/wiki-core": ["./packages/wiki-core/src/index.ts"]
     }
   },
   "include": ["packages/**/*.ts", "tools/**/*.ts", "tests/**/*.ts"],

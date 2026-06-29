@@ -21,9 +21,9 @@ const config: Config = {
     ],
   },
   moduleNameMapper: {
-    "^@template/ui$": "<rootDir>/packages/ui/src/index.ts",
-    "^@template/utils$": "<rootDir>/packages/utils/src/index.ts",
-    "^@template/config$": "<rootDir>/packages/config/index.ts",
+    "^@wikiwonder/ui$": "<rootDir>/packages/ui/src/index.ts",
+    "^@wikiwonder/utils$": "<rootDir>/packages/utils/src/index.ts",
+    "^@wikiwonder/config$": "<rootDir>/packages/config/index.ts",
     "^(\\.{1,2}/.*)\\.js$": "$1",
   },
   testMatch: [

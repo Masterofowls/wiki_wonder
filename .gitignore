@@ -75,3 +75,6 @@ Thumbs.db
 .parcel-cache/
 *.tgz
 *.tar.gz
+/node_modules
+/.cursor
+.vercel
