@@ -1,20 +1,31 @@
 # Deploying WikiWonder to Vercel
 
-WikiWonder deploys as a **Bun monorepo**. The Next.js app lives in `apps/web`; Strapi CMS deploys separately.
+WikiWonder is a **Bun monorepo**. Choose **one** configuration below — do not mix them.
 
-## Critical: Root Directory
+## Option A — Root Directory: `.` (recommended for GitHub)
 
-In **Vercel → Project → Settings → General → Root Directory**, set:
+Use when the Vercel project is linked to the full repo (e.g. `wiki_wonder`).
 
+1. **Vercel → Settings → General → Root Directory** → leave as **`.`** (repository root)
+2. Root [`vercel.json`](../vercel.json) is used automatically:
+
+```json
+{
+  "installCommand": "bun install",
+  "buildCommand": "bun run build:web",
+  "outputDirectory": "apps/web/.next",
+  "framework": "nextjs"
+}
 ```
-apps/web
-```
 
-Vercel detects Next.js from `apps/web/package.json`. If Root Directory is `.` (repo root), the build fails with:
+3. Root [`package.json`](../package.json) includes `next` so Vercel detects the framework.
 
-> No Next.js version detected. Make sure your package.json has "next" in dependencies...
+## Option B — Root Directory: `apps/web`
 
-The install/build commands in `apps/web/vercel.json` run from the monorepo root so workspace packages resolve:
+Use if you prefer the Next.js app folder as the project root.
+
+1. **Vercel → Settings → General → Root Directory** → **`apps/web`**
+2. [`apps/web/vercel.json`](../apps/web/vercel.json) runs install/build from the monorepo root:
 
 ```json
 {
@@ -24,51 +35,48 @@ The install/build commands in `apps/web/vercel.json` run from the monorepo root 
 }
 ```
 
-## 1. Link the project
+Requires **Git integration** (full repo checkout). CLI-only uploads of `apps/web` alone will fail.
+
+---
+
+## Fix: "No Next.js version detected"
+
+This error means Vercel is reading a `package.json` that does **not** list `next`:
+
+| Root Directory | Fix |
+|---|---|
+| `.` (repo root) | Ensure root `package.json` has `next` in `dependencies` (already configured) |
+| `apps/web` | Set Root Directory to `apps/web` — `next` is in `apps/web/package.json` |
+
+After changing Root Directory, **redeploy** from the Deployments tab.
+
+## Environment variables
+
+Set in **Vercel → Settings → Environment Variables** (from [`.env.example`](../.env.example)):
+
+| Variable | Required |
+|---|---|
+| `NEXT_PUBLIC_APP_URL` | Yes |
+| `NEXT_PUBLIC_APP_NAME` | Yes |
+| `AUTH_SECRET` | Yes |
+| `AUTH_URL` | Yes |
+| `STRAPI_GRAPHQL_URL` | Optional |
+| `STRAPI_API_TOKEN` | Optional |
+| `DATABASE_URL` | Optional |
+
+## Deploy
 
 ```bash
-cd apps/web
-vercel link
-```
+# Git push (recommended)
+git push origin main
 
-When importing from GitHub, set **Root Directory** to `apps/web` during setup.
-
-## 2. Environment variables
-
-Copy from [`.env.example`](../../.env.example) into **Vercel → Settings → Environment Variables**:
-
-| Variable | Required | Notes |
-|---|---|---|
-| `NEXT_PUBLIC_APP_URL` | Yes | `https://your-app.vercel.app` |
-| `NEXT_PUBLIC_APP_NAME` | Yes | `WikiWonder` |
-| `NEXT_PUBLIC_APP_DESCRIPTION` | Yes | App description |
-| `AUTH_SECRET` | Yes | `openssl rand -base64 32` |
-| `AUTH_URL` | Yes | Same as `NEXT_PUBLIC_APP_URL` |
-| `STRAPI_GRAPHQL_URL` | Recommended | Strapi host + `/graphql` |
-| `STRAPI_API_TOKEN` | Recommended | Strapi Admin → API Tokens |
-| `DATABASE_URL` | Optional | Supabase Postgres |
-| `NEXT_PUBLIC_ENABLE_SW` | Optional | `true` for PWA |
-
-## 3. Deploy
-
-### Git push (recommended)
-
-Push to GitHub — Vercel builds from `apps/web` with full repo checkout.
-
-### CLI preview deploy
-
-```bash
-cd apps/web
+# CLI preview (from repo root — Option A)
 vercel deploy --yes --no-wait
-vercel inspect <deployment-url>
+
+# CLI preview (Option B — Root Directory must be apps/web in dashboard)
+cd apps/web && vercel deploy --yes --no-wait
 ```
 
-## 4. Strapi CMS (separate host)
+## Strapi CMS
 
-Strapi cannot run on Vercel serverless. Deploy `apps/cms` to Render, Railway, or Fly.io — see [apps/cms/README.md](../../apps/cms/README.md).
-
-## 5. Supabase (optional)
-
-1. Create a Supabase project
-2. Set `DATABASE_URL` on Vercel
-3. Run `bun run db:migrate` locally against that database
+Deploy `apps/cms` separately (Render/Railway/Fly.io). See [apps/cms/README.md](../apps/cms/README.md).

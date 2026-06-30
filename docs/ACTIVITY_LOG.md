@@ -73,4 +73,11 @@ Running history of significant changes to this project.
 - **Vercel** — `apps/web/vercel.json`, `docs/VERCEL_DEPLOY.md`, updated `.env.example` with production vars
 - **Monorepo** — Excluded `apps/cms` from Bun workspaces (uses npm); added `dev:cms` / `build:cms` scripts
 
+## 2026-06-29 (Vercel monorepo fix)
+
+- **Root package.json** — Added `next`, `react`, `react-dom` so Vercel detects Next.js when Root Directory is `.`
+- **vercel.json** — Root monorepo config: `bun install` → `bun run build:web` → `apps/web/.next`
+- **apps/web/vercel.json** — Alternate config when Root Directory is `apps/web` (Git deploys only)
+- **docs/VERCEL_DEPLOY.md** — Documented Option A (root) vs Option B (apps/web) and detection error fix
+
 ---

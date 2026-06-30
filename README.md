@@ -96,12 +96,13 @@ bun run cve            # CVE scan
 
 ## Deploy (Vercel)
 
-**Root Directory must be `apps/web`** in Vercel project settings. See [docs/VERCEL_DEPLOY.md](docs/VERCEL_DEPLOY.md).
+**Option A (GitHub):** Root Directory = `.` — uses root [`vercel.json`](vercel.json).  
+**Option B:** Root Directory = `apps/web` — uses [`apps/web/vercel.json`](apps/web/vercel.json).
+
+See [docs/VERCEL_DEPLOY.md](docs/VERCEL_DEPLOY.md) for the full guide and the "No Next.js version detected" fix.
 
 ```bash
-cd apps/web
-vercel link
-vercel deploy --yes
+vercel deploy --yes   # from repo root (Option A)
 ```
 
 **Strapi CMS** deploys separately — see [apps/cms/README.md](apps/cms/README.md).

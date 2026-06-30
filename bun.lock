@@ -4,6 +4,11 @@
   "workspaces": {
     "": {
       "name": "ts-react-fullstack-template",
+      "dependencies": {
+        "next": "^15.1.6",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
+      },
       "devDependencies": {
         "@biomejs/biome": "^1.9.4",
         "@jest/globals": "^30.4.1",
