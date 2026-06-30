@@ -1,0 +1,49 @@
+# fly.toml — WikiWonder (Strapi + Next.js on one machine)
+# https://fly.io/docs/reference/configuration/
+
+app = 'wikiwonder-wiki'
+primary_region = 'iad'
+
+[build]
+  dockerfile = 'Dockerfile.fly'
+
+[env]
+  NODE_ENV = 'production'
+  WEB_PORT = '3000'
+  HOST = '0.0.0.0'
+  DATABASE_CLIENT = 'postgres'
+  DATABASE_SSL = 'true'
+  # Internal service URLs (same machine)
+  STRAPI_GRAPHQL_URL = 'http://127.0.0.1:1337/graphql'
+  REVALIDATE_URL = 'http://127.0.0.1:3000/api/revalidate'
+  NEXT_PUBLIC_ENABLE_SW = 'true'
+
+[http_service]
+  internal_port = 8080
+  force_https = true
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+  processes = ['app']
+
+  [[http_service.checks]]
+    grace_period = '120s'
+    interval = '15s'
+    method = 'GET'
+    timeout = '10s'
+    path = '/api/health'
+
+  [http_service.concurrency]
+    type = 'requests'
+    hard_limit = 250
+    soft_limit = 200
+
+[[vm]]
+  memory = '2048mb'
+  cpu_kind = 'shared'
+  cpus = 2
+
+# Persistent Strapi media uploads
+[mounts]
+  source = 'wikiwonder_wiki_uploads'
+  destination = '/app/apps/cms/public/uploads'

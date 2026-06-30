@@ -17,6 +17,7 @@ const withPWA = withPWAInit({
 const nextConfig: NextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  output: "standalone",
   outputFileTracingRoot: path.join(__dirname, "../.."),
   typedRoutes: true,
 
