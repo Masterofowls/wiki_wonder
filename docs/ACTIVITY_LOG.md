@@ -80,4 +80,12 @@ Running history of significant changes to this project.
 - **apps/web/vercel.json** — Alternate config when Root Directory is `apps/web` (Git deploys only)
 - **docs/VERCEL_DEPLOY.md** — Documented Option A (root) vs Option B (apps/web) and detection error fix
 
+## 2026-06-29 (Render CMS + Neon + realtime)
+
+- **render.yaml** — Render Blueprint for `wikiwonder-cms` (Node, Neon Postgres, health check)
+- **Strapi lifecycles** — Publish/update wiki pages → POST Vercel `/api/revalidate`
+- **apps/web** — `/api/revalidate` cache busting, `/admin` redirect to Strapi, tagged Strapi fetches
+- **Neon workflow** — `.github/workflows/neon-branches.yml` for PR preview database branches
+- **docs/RENDER_DEPLOY.md** — Full Render + Neon + Vercel env configuration guide
+
 ---

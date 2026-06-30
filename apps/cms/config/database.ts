@@ -4,12 +4,18 @@ export default ({ env }) => {
   const client = env("DATABASE_CLIENT", "sqlite");
 
   if (client === "postgres") {
+    const connectionString = env("DATABASE_URL");
+    const useSsl =
+      env.bool("DATABASE_SSL", false) ||
+      connectionString.includes("sslmode=require") ||
+      connectionString.includes("neon.tech");
+
     return {
       connection: {
         client: "postgres",
         connection: {
-          connectionString: env("DATABASE_URL"),
-          ssl: env.bool("DATABASE_SSL", false) ? { rejectUnauthorized: false } : false,
+          connectionString,
+          ssl: useSsl ? { rejectUnauthorized: false } : false,
         },
         pool: { min: 0, max: 10 },
       },

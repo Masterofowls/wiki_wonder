@@ -94,16 +94,14 @@ bun run cve            # CVE scan
 
 ---
 
-## Deploy (Vercel)
+## Deploy
 
-**Option A (GitHub):** Root Directory = `.` — uses root [`vercel.json`](vercel.json).  
-**Option B:** Root Directory = `apps/web` — uses [`apps/web/vercel.json`](apps/web/vercel.json).
+| Service | Host | Docs |
+|---|---|---|
+| Wiki frontend | [Vercel](https://wikiwonder.vercel.app) | [VERCEL_DEPLOY.md](docs/VERCEL_DEPLOY.md) |
+| Strapi CMS | [Render](https://render.com) | [RENDER_DEPLOY.md](docs/RENDER_DEPLOY.md) |
 
-See [docs/VERCEL_DEPLOY.md](docs/VERCEL_DEPLOY.md) for the full guide and the "No Next.js version detected" fix.
-
-```bash
-vercel deploy --yes   # from repo root (Option A)
-```
+Admin: **https://wikiwonder.vercel.app/admin** (redirects to Render CMS when configured).
 
 **Strapi CMS** deploys separately — see [apps/cms/README.md](apps/cms/README.md).
 

@@ -79,3 +79,5 @@ Thumbs.db
 /.cursor
 .vercel
 /~/.bun/install/cache
+/apps/cms/node_modules
+/apps/web/node_modules

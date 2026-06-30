@@ -1,0 +1,46 @@
+# WikiWonder — Render Blueprint
+# https://render.com/docs/blueprint-spec
+#
+# Deploy: Render Dashboard → New → Blueprint → connect this repo
+# Or: render deploy create from render.yaml
+
+services:
+  - type: web
+    name: wikiwonder-cms
+    runtime: node
+    plan: free
+    region: frankfurt
+    rootDir: apps/cms
+    buildCommand: npm install && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: HOST
+        value: 0.0.0.0
+      - key: DATABASE_CLIENT
+        value: postgres
+      - key: DATABASE_SSL
+        value: "true"
+      # Neon pooled connection — set in Render dashboard (never commit secrets)
+      - key: DATABASE_URL
+        sync: false
+      - key: APP_KEYS
+        sync: false
+      - key: API_TOKEN_SALT
+        sync: false
+      - key: ADMIN_JWT_SECRET
+        sync: false
+      - key: TRANSFER_TOKEN_SALT
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CORS_ORIGIN
+        value: https://wikiwonder.vercel.app,http://localhost:9000
+      - key: REVALIDATE_URL
+        value: https://wikiwonder.vercel.app/api/revalidate
+      - key: REVALIDATE_SECRET
+        sync: false
+      - key: STRAPI_PUBLIC_URL
+        sync: false

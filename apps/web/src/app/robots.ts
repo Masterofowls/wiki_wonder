@@ -10,7 +10,7 @@ export default function robots(): MetadataRoute.Robots {
         allow: "/",
         // Block internal Next.js and API paths from indexing.
         // Add more paths here if you have admin or private sections.
-        disallow: ["/api/", "/_next/", "/admin/"],
+        disallow: ["/api/", "/_next/"],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,

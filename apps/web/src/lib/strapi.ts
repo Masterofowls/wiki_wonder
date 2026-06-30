@@ -1,8 +1,10 @@
 import { GraphQLClient, gql } from "graphql-request";
 import type { WikiPage } from "@wikiwonder/db";
+import { unstable_cache } from "next/cache";
 
 const STRAPI_GRAPHQL_URL = process.env.STRAPI_GRAPHQL_URL;
 const STRAPI_API_TOKEN = process.env.STRAPI_API_TOKEN;
+export const WIKI_PAGES_CACHE_TAG = "wiki-pages";
 
 export interface StrapiWikiPage {
   documentId: string;
@@ -108,7 +110,7 @@ export function mapStrapiPageToWikiPage(page: StrapiWikiPage): WikiPage {
   };
 }
 
-export async function fetchStrapiWikiPages(limit = 24): Promise<WikiPage[]> {
+async function fetchStrapiWikiPagesRaw(limit = 24): Promise<WikiPage[]> {
   if (!isStrapiConfigured()) return [];
 
   try {
@@ -122,7 +124,7 @@ export async function fetchStrapiWikiPages(limit = 24): Promise<WikiPage[]> {
   }
 }
 
-export async function fetchStrapiWikiPageBySlug(slug: string): Promise<WikiPage | null> {
+async function fetchStrapiWikiPageBySlugRaw(slug: string): Promise<WikiPage | null> {
   if (!isStrapiConfigured()) return null;
 
   try {
@@ -138,7 +140,7 @@ export async function fetchStrapiWikiPageBySlug(slug: string): Promise<WikiPage 
   }
 }
 
-export async function searchStrapiWikiPages(term: string, limit = 10): Promise<WikiPage[]> {
+async function searchStrapiWikiPagesRaw(term: string, limit = 10): Promise<WikiPage[]> {
   if (!isStrapiConfigured()) return [];
 
   try {
@@ -151,4 +153,30 @@ export async function searchStrapiWikiPages(term: string, limit = 10): Promise<W
     console.error("[strapi] searchStrapiWikiPages failed:", error);
     return [];
   }
+}
+
+const getCachedWikiPages = unstable_cache(
+  async (limit: number) => fetchStrapiWikiPagesRaw(limit),
+  ["strapi-wiki-pages"],
+  { tags: [WIKI_PAGES_CACHE_TAG], revalidate: 3600 },
+);
+
+export async function fetchStrapiWikiPages(limit = 24): Promise<WikiPage[]> {
+  if (!isStrapiConfigured()) return [];
+  return getCachedWikiPages(limit);
+}
+
+export async function fetchStrapiWikiPageBySlug(slug: string): Promise<WikiPage | null> {
+  if (!isStrapiConfigured()) return null;
+
+  return unstable_cache(
+    async () => fetchStrapiWikiPageBySlugRaw(slug),
+    ["strapi-wiki-page", slug],
+    { tags: [WIKI_PAGES_CACHE_TAG], revalidate: 3600 },
+  )();
+}
+
+export async function searchStrapiWikiPages(term: string, limit = 10): Promise<WikiPage[]> {
+  if (!isStrapiConfigured()) return [];
+  return searchStrapiWikiPagesRaw(term, limit);
 }
